@@ -90,11 +90,14 @@ iptables -t mangle -D PREROUTING {rule-number-here}
 iptables -t filter -D PREROUTING {rule-number-here}
 ```
 
-Test on server side:
+## NC
 ```
 nc -u -l 50000
-```
-On the other:
-```
 nc -u 10.30.1.1 50000
+```
+
+## IRTT
+```
+irtt server -b 0.0.0.0:50000
+irtt client -i 100ms -d 10s -l 172 --fill=rand 10.30.1.1:50000 --local=0.0.0.0:50000
 ```
