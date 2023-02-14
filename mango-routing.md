@@ -1,17 +1,24 @@
-On the WiFi station:
+# On the WiFi station:
 
-1. IMPORTANT: Enable ip forwarding 
+Make sure the wifi connection to the access point is established. We assume the ip of the station is `192.168.11.10` on `wlan0`.
+
+1. Disable default route
+```
+ip route del default
+```
+
+2. Enable ip forwarding 
 ```
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
 
-2. Setup forward path (from client to server)
+3. Setup forward path (from client to server)
 ```
 iptables -t nat -A PREROUTING -i eth0 -d 10.30.1.1 -p udp --dport 50000 -j DNAT --to-destination 192.168.11.1:50000
 iptables -t nat -A POSTROUTING -o wlan0 -s 10.30.1.252 -p udp --dport 50000 -j SNAT --to 192.168.11.10:50500
 ```
 
-3. Setup backward path (from server to client)
+4. Setup backward path (from server to client)
 ```
 iptables -t nat -A PREROUTING -i wlan0 -d 192.168.11.10 -p udp --dport 50500 -j DNAT --to-destination 10.30.1.252:50500
 iptables -t nat -A POSTROUTING -o eth0 -s 192.168.11.1 -p udp --dport 50000 -j SNAT --to 10.30.1.1:50000
@@ -37,9 +44,9 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
     0     0 SNAT       udp  --  *      eth0    192.168.11.1         0.0.0.0/0            udp dpt:50000 to:10.30.1.1:50000
 ```
 
-On the AP:
+# On the WiFi access point:
 
-1. IMPORTANT: Enable ip forwarding 
+1. Enable ip forwarding 
 ```
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
