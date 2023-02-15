@@ -1,3 +1,5 @@
+![alt text](./routing.jpg)
+
 # On the WiFi station:
 
 Make sure the wifi connection to the access point is established. We assume the ip of the station is `192.168.11.10` on `wlan0`.
