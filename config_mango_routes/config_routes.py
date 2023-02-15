@@ -279,7 +279,7 @@ if __name__ == "__main__":
             [
                 "/sbin/ip route del default",
                 "/bin/echo 1 > /proc/sys/net/ipv4/ip_forward",
-                "iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE",
+                "/usr/sbin/iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE",
                 "/usr/sbin/iptables -t nat -A PREROUTING -i eth0 -d {0} -p {1} --dport {2} -j DNAT --to-destination {3}:{4}".format(
                     sdr_status['mango']['ip'],
                     routing_conf['protocol'].lower(),
