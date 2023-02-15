@@ -4,6 +4,9 @@ import json
 import socket
 import re
 
+WAIT_DURATION_SEC=40
+POLLING_INTERVAL=10
+
 # Example:
 # DESIGN='mango' SDR='sdr-01' SIDE='sta' CONFIG='{"mac_addr":"40:d8:55:04:20:19"}' JSON_PATH='../sdrs.json' python start_mango.py
 # DESIGN='mango' SDR='sdr-02' SIDE='ap' CONFIG='{"mac_addr":"40:d8:55:04:20:10"}' JSON_PATH='../sdrs.json' python start_mango.py
@@ -170,11 +173,11 @@ if __name__ == "__main__":
         # create a new interface with the new mac_addr
         stdout, stderr = run_cmd_mango(
             ip,
-            '/usr/sbin/iw phy mango-wlan-phy interface add wlan0 type managed addr {wifi_conf["mac_addr"]}',
+            f'/usr/sbin/iw phy mango-wlan-phy interface add wlan0 type managed addr {wifi_conf["mac_addr"]}',
         )
 
     else:
-        print("{sdr} already has wlan0, it is advised reboot it.")
+        print(f"{sdr} already has wlan0, it is advised reboot it.")
 
     # ready to run the iw commands
     if side == 'sta':
@@ -187,4 +190,33 @@ if __name__ == "__main__":
             ip,
             '/home/root/run_ap.sh',
         )
+
+    # Wait for the new design
+    success = False
+    t_end = time.time() + WAIT_DURATION_SEC * 1
+    print(f'Waiting {WAIT_DURATION_SEC} seconds for the new desgin to load')
+    while time.time() < t_end:
+        print(f"{POLLING_INTERVAL} seconds to the next poll...")
+        time.sleep(POLLING_INTERVAL)
+        check_dict = check_mango(ip)
+        if check_dict['wlan0_ip']:
+            success = True
+            break
+
+    if success:
+        print(f'{sdr} mango is running {side} with ip {check_dict["wlan0_ip"]}.')
+    else:
+        print(f'{sdr} mango start {side} did not work.')
+
+    return success
+
+
+
+    # if wlan0 is up, read the ip
+    if status["wlan0_up"]:
+        stdout, stderr = run_cmd_mango(
+            ip,
+            "/sbin/ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2| cut -d' ' -f1",
+        )
+        status["wlan0_ip"] = stdout
 
