@@ -28,14 +28,23 @@ docker image push samiemostafavi/change-sdr-design
 ## Start Mango WiFi
 
 Using the python script:
+
+AP:
 ```
 DESIGN='mango' SDR='sdr-02' SIDE='ap' CONFIG='{"mac_addr":"40:d8:55:04:20:12"}' JSON_PATH='sdrs.json' python start_mango/start_mango.py
 ```
+STA:
 ```
 DESIGN='mango' SDR='sdr-01' SIDE='sta' CONFIG='{"mac_addr":"40:d8:55:04:20:19"}' JSON_PATH='sdrs.json' python start_mango/start_mango.py
 ```
 
 ## Configure Mango Routing
 
+AP:
 ```
+SDR='sdr-02' SIDE='ap' JSON_PATH='../sdrs.json' CONFIG='{"protocol":"udp","server":{"ip":"10.30.1.251","port":"50000"},"ap":{"server_port":"50500","sta_port":"50000"},"sta":{"mac_addr":"40:d8:55:04:20:19","ip":"192.168.11.10","ap_port":"50500"}}' python config_routes.py
+```
+STA:
+```
+SDR='sdr-01' SIDE='sta' JSON_PATH='../sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"ip":"192.168.11.1","sta_port":"50000"}}' python config_routes.py
 ```
