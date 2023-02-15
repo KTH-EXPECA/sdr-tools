@@ -27,7 +27,7 @@ iptables -t nat -A POSTROUTING -o eth0 -s 192.168.11.1 -p udp --dport 50000 -j S
 ```
 
 Check NAT table
-```
+```console
 root@mango_wlan_linux_E320:~$ iptables -t nat -L -n -v
 Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination         
@@ -56,7 +56,7 @@ If using the script, config json should be like this:
   "sta": {
     "client_ip": "10.30.1.1",
     "client_port": "50000",
-    "ap_port": "50500",
+    "ap_port": "50500"
   }
 }
 ```
@@ -81,7 +81,7 @@ iptables -t nat -A POSTROUTING -o wlan0 -s 10.30.1.251 -p udp --dport 50000 -j S
 ```
 
 Show tables
-```
+```console
 root@mango_wlan_linux_E320:~$ iptables -t nat -L -n -v
 Chain PREROUTING (policy ACCEPT 0 packets, 0 bytes)
  pkts bytes target     prot opt in     out     source               destination         
@@ -110,7 +110,7 @@ If using the script, config json should be like this:
   "ap": {
     "server_ip": "10.30.1.3",
     "server_port": "50500",
-    "ap_port": "50000",
+    "ap_port": "50000"
   }
 }
 ```
