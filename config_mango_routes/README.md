@@ -58,6 +58,9 @@ If using the script, config json should be like this:
     "client_ip": "10.30.1.1",
     "client_port": "50000",
     "ap_port": "50500"
+  },
+  "ap": {
+    "sta_port": "50000",
   }
 }
 ```
