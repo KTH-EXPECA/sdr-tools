@@ -46,6 +46,21 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
     0     0 SNAT       udp  --  *      eth0    192.168.11.1         0.0.0.0/0            udp dpt:50000 to:10.30.1.1:50000
 ```
 
+If using the script, config json should be like this:
+```json
+{
+  "client": {
+    "ip": "10.30.1.252",
+    "port": "50000"
+  },
+  "sta": {
+    "client_ip": "10.30.1.1",
+    "client_port": "50000",
+    "ap_port": "50500",
+  }
+}
+```
+
 # On the WiFi access point:
 
 1. Enable ip forwarding 
@@ -85,6 +100,22 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
     0     0 SNAT       udp  --  *      wlan0   10.30.1.251          0.0.0.0/0            udp dpt:50000 to:192.168.11.1:50000
 ```
 
+If using the script, config json should be like this:
+```json
+{
+  "server": {
+    "ip": "10.30.1.251",
+    "port": "50000"
+  },
+  "ap": {
+    "server_ip": "10.30.1.3",
+    "server_port": "50500",
+    "ap_port": "50000",
+  }
+}
+```
+
+
 Check each table with line number
 ```
 iptables -t nat -v -L -n --line-number
@@ -98,6 +129,7 @@ iptables -t nat -D PREROUTING {rule-number-here}
 iptables -t mangle -D PREROUTING {rule-number-here}
 iptables -t filter -D PREROUTING {rule-number-here}
 ```
+
 
 ## NC
 ```
