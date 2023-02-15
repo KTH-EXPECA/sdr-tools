@@ -208,14 +208,6 @@ def check_mango(ip):
         )
         status["wlan0_link"] = parse_iwlink(stdout)
 
-    # read AP ip if it is STA and up
-    if status["wlan0_up"] and status["wlan0_info"]["type"] == "managed":
-        stdout, stderr = run_cmd_mango(
-            ip,
-            "/sbin/arp -an | /bin/grep {status['wlan0_link']['ap mac']} | /usr/bin/awk '{print $2}' | /bin/sed 's/[()]//g'",
-        )
-        status["wlan0_link"]["ap ip"] = stdout
-
     # check wlan0 stations if it is AP and up
     if status["wlan0_up"] and status["wlan0_info"]["type"].lower() == "ap":
         stdout, stderr = run_cmd_mango(
@@ -223,15 +215,6 @@ def check_mango(ip):
             '/usr/sbin/iw dev wlan0 station dump',
         )
         status["wlan0_link"] = parse_iwstationdump(stdout)
-
-    # read stations ips if it is AP and up
-    if status["wlan0_up"] and status["wlan0_info"]["type"].lower() == "ap":
-        for mac_addr in status["wlan0_link"]:
-            stdout, stderr = run_cmd_mango(
-                ip,
-                "/sbin/arp -an | /bin/grep " + mac_addr + " | /usr/bin/awk '{print $2}' | /bin/sed 's/[()]//g'",
-            )
-            status["wlan0_link"][mac_addr]['ip'] = stdout
 
     return status
 
@@ -299,7 +282,7 @@ if __name__ == "__main__":
                     sdr_status['mango']['ip'],
                     routing_conf['protocol'].lower(),
                     routing_conf['sta']['client_port'],
-                    sdr_status['mango']['wlan0_link']['ap ip'],
+                    routing_conf['ap']['ip'],
                     routing_conf['ap']['sta_port'],
                 ),
                 "/usr/sbin/iptables -t nat -A POSTROUTING -o wlan0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
@@ -317,7 +300,7 @@ if __name__ == "__main__":
                     routing_conf['client']['port'],
                 ),
                 "/usr/sbin/iptables -t nat -A POSTROUTING -o eth0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
-                    sdr_status['mango']['wlan0_link']['ap ip'],
+                    routing_conf['ap']['ip'],
                     routing_conf['protocol'].lower(),
                     routing_conf['ap']['sta_port'],
                     sdr_status['mango']['ip'],
@@ -341,7 +324,7 @@ if __name__ == "__main__":
                     routing_conf['server']['port'],
                 ),
                 "/usr/sbin/iptables -t nat -A POSTROUTING -o eth0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
-                    sdr_status['mango']['wlan0_link'][routing_conf['sta']['mac_addr']]['ip'],
+                    routing_conf['sta']['ip'],
                     routing_conf['protocol'].lower(),
                     routing_conf['sta']['ap_port'],
                     sdr_status['mango']['ip'],
@@ -351,7 +334,7 @@ if __name__ == "__main__":
                     sdr_status['mango']['ip'],
                     routing_conf['protocol'].lower(),
                     routing_conf['ap']['server_port'],
-                    sdr_status['mango']['wlan0_link'][routing_conf['sta']['mac_addr']]['ip'],
+                    routing_conf['sta']['ip'],
                     routing_conf['sta']['ap_port'],
                 ),
                 "/usr/sbin/iptables -t nat -A POSTROUTING -o wlan0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
