@@ -48,3 +48,15 @@ STA:
 ```
 SDR='sdr-01' SIDE='sta' JSON_PATH='sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"ip":"192.168.11.1","sta_port":"50000"}}' python config_mango_routes/config_routes.py
 ```
+
+## NC
+```
+nc -u -l 50000
+nc -u 10.30.1.1 50000
+```
+
+## IRTT
+```
+irtt server -b 0.0.0.0:50000
+irtt client -i 100ms -d 10s -l 172 --fill=rand 10.30.1.1:50000 --local=0.0.0.0:50000
+```
