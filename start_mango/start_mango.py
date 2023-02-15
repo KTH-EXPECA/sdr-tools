@@ -5,8 +5,8 @@ import socket
 import re
 
 # Example:
-# DESIGN='mango' SDR='sdr-01' SIDE='sta' CONFIG='{}' JSON_PATH='../sdrs.json' python start_mango.py
-# DESIGN='mango' SDR='sdr-02' SIDE='ap' CONFIG='{}' JSON_PATH='../sdrs.json' python start_mango.py
+# DESIGN='mango' SDR='sdr-01' SIDE='sta' CONFIG='{"mac_addr":"40:d8:55:04:20:19"}' JSON_PATH='../sdrs.json' python start_mango.py
+# DESIGN='mango' SDR='sdr-02' SIDE='ap' CONFIG='{"mac_addr":"40:d8:55:04:20:10"}' JSON_PATH='../sdrs.json' python start_mango.py
 
 def check_host(server_ip,port):
     try:
