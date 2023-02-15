@@ -1,15 +1,11 @@
 import os
 import paramiko
-import time
 import json
 import socket
 import re
 
-WAIT_DURATION_SEC = 100
-POLLING_INTERVAL = 10
-
 # Example:
-# DESIGN='mango' SDR='sdr-01' JSON_PATH='sdrs.json' python change_design.py
+# SDR='sdr-01' SIDE='sta' JSON_PATH='../sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"sta_port":"50000"}}' python config_routes.py
 
 def check_host(server_ip,port):
     try:
