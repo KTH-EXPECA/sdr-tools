@@ -137,6 +137,27 @@ def parse_iwlink(inp):
 
     return res_dict
 
+def parse_iwstationdump(inp):
+
+    lines = inp.splitlines()
+    res_dict = {}
+    for idx,line in enumerate(lines):
+        
+        if line.split()[0] == "Station":
+            line = re.sub(r'\([^)]*\)', '', line)
+            line = line.strip()
+            sections = line.split(' ')
+            device = sections[1].replace('\t','')
+            res_dict[device] = {}
+        else:
+            if line.strip():
+                sections = line.split(':')
+                res_dict[device][
+                    sections[0].replace('\t','')
+                ] = sections[1].strip().replace('\t','')
+
+    return res_dict
+
 
 def check_mango(ip):
 
@@ -191,9 +212,26 @@ def check_mango(ip):
     if status["wlan0_up"] and status["wlan0_info"]["type"] == "managed":
         stdout, stderr = run_cmd_mango(
             ip,
-            "/sbin/arp -an | /bin/grep '40:d8:55:04:20:10' | /usr/bin/awk '{print $2}' | /bin/sed 's/[()]//g'",
+            "/sbin/arp -an | /bin/grep {status['wlan0_link']['ap mac']} | /usr/bin/awk '{print $2}' | /bin/sed 's/[()]//g'",
         )
         status["wlan0_link"]["ap ip"] = stdout
+
+    # check wlan0 stations if it is AP and up
+    if status["wlan0_up"] and status["wlan0_info"]["type"].lower() == "ap":
+        stdout, stderr = run_cmd_mango(
+            ip,
+            '/usr/sbin/iw dev wlan0 station dump',
+        )
+        status["wlan0_link"] = parse_iwstationdump(stdout)
+
+    # read stations ips if it is AP and up
+    if status["wlan0_up"] and status["wlan0_info"]["type"].lower() == "ap":
+        for mac_addr in status["wlan0_link"]:
+            stdout, stderr = run_cmd_mango(
+                ip,
+                "/sbin/arp -an | /bin/grep " + mac_addr + " | /usr/bin/awk '{print $2}' | /bin/sed 's/[()]//g'",
+            )
+            status["wlan0_link"][mac_addr]['ip'] = stdout
 
     return status
 
@@ -290,7 +328,42 @@ if __name__ == "__main__":
         )
 
     elif side == 'ap':
-        pass
+        run_cmds_mango(
+            sdr_status['mango']['ip'],
+            [
+                "/bin/echo 1 > /proc/sys/net/ipv4/ip_forward",
+                "/usr/sbin/iptables -t nat -D POSTROUTING 1",
+                "/usr/sbin/iptables -t nat -A PREROUTING -i wlan0 -d {0} -p {1} --dport {2} -j DNAT --to-destination {3}:{4}".format(
+                    sdr_status['mango']['wlan0_ip'],
+                    routing_conf['protocol'].lower(),
+                    routing_conf['ap']['sta_port'],
+                    routing_conf['server']['ip'],
+                    routing_conf['server']['port'],
+                ),
+                "/usr/sbin/iptables -t nat -A POSTROUTING -o eth0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
+                    sdr_status['mango']['wlan0_link'][routing_conf['sta']['mac_addr']]['ip'],
+                    routing_conf['protocol'].lower(),
+                    routing_conf['sta']['ap_port'],
+                    sdr_status['mango']['ip'],
+                    routing_conf['ap']['server_port'],
+                ),
+                "/usr/sbin/iptables -t nat -A PREROUTING -i eth0 -d {0} -p {1} --dport {2} -j DNAT --to-destination {3}:{4}".format(
+                    sdr_status['mango']['ip'],
+                    routing_conf['protocol'].lower(),
+                    routing_conf['ap']['server_port'],
+                    sdr_status['mango']['wlan0_link'][routing_conf['sta']['mac_addr']]['ip'],
+                    routing_conf['sta']['ap_port'],
+                ),
+                "/usr/sbin/iptables -t nat -A POSTROUTING -o wlan0 -s {0} -p {1} --dport {2} -j SNAT --to {3}:{4}".format(
+                    routing_conf['server']['ip'],
+                    routing_conf['protocol'].lower(),
+                    routing_conf['server']['port'],
+                    sdr_status['mango']['wlan0_ip'],
+                    routing_conf['ap']['sta_port'],
+                ),
+                "/usr/sbin/iptables -t nat -L -n -v"
+            ]
+        )
 
     
     
