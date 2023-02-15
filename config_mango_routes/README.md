@@ -59,7 +59,7 @@ If using the script, config json should be like this:
     "ap_port": "50500"
   },
   "ap": {
-    "sta_port": "50000",
+    "sta_port": "50000"
   }
 }
 ```
