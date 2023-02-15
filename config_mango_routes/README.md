@@ -22,7 +22,7 @@ iptables -t nat -A POSTROUTING -o wlan0 -s 10.30.1.252 -p udp --dport 50000 -j S
 
 4. Setup backward path (from server to client)
 ```
-iptables -t nat -A PREROUTING -i wlan0 -d 192.168.11.10 -p udp --dport 50500 -j DNAT --to-destination 10.30.1.252:50500
+iptables -t nat -A PREROUTING -i wlan0 -d 192.168.11.10 -p udp --dport 50500 -j DNAT --to-destination 10.30.1.252:50000
 iptables -t nat -A POSTROUTING -o eth0 -s 192.168.11.1 -p udp --dport 50000 -j SNAT --to 10.30.1.1:50000
 ```
 
