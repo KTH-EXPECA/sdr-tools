@@ -224,9 +224,13 @@ if __name__ == "__main__":
 
     # ready to run the iw commands
     if side == 'sta':
-        stdout, stderr = run_cmd_mango(
+        run_cmds_mango(
             sdr_status['mango']['ip'],
-            '/home/root/run_sta.sh',
+            [
+                "/usr/sbin/wpa_supplicant -B -i wlan0 -d nl80211 -c /home/root/wpa_supplicant.conf",
+                "/bin/sleep 10",
+                "/sbin/udhcpc -i wlan0 -b",
+            ]
         )
 
 
