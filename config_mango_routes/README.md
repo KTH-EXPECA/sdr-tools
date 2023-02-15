@@ -14,6 +14,11 @@ ip route del default
 echo 1 > /proc/sys/net/ipv4/ip_forward
 ```
 
+2.5 Enable MASQUERADE on eth0:
+```
+iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE
+```
+
 3. Setup forward path (from client to server)
 ```
 iptables -t nat -A PREROUTING -i eth0 -d 10.30.1.1 -p udp --dport 50000 -j DNAT --to-destination 192.168.11.1:50000
