@@ -112,9 +112,12 @@ If using the script, config json should be like this:
     "port": "50000"
   },
   "ap": {
-    "server_ip": "10.30.1.3",
     "server_port": "50500",
-    "ap_port": "50000"
+    "sta_port": "50000"
+  },
+  "sta": {
+    "mac_addr": "40:d8:55:04:20:19",
+    "ap_port": "50500"
   }
 }
 ```
