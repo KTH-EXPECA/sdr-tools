@@ -49,6 +49,7 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
 If using the script, config json should be like this:
 ```json
 {
+  "protocol": "udp",
   "client": {
     "ip": "10.30.1.252",
     "port": "50000"
@@ -103,6 +104,7 @@ Chain POSTROUTING (policy ACCEPT 0 packets, 0 bytes)
 If using the script, config json should be like this:
 ```json
 {
+  "protocol": "udp",
   "server": {
     "ip": "10.30.1.251",
     "port": "50000"
