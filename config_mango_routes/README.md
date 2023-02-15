@@ -59,6 +59,7 @@ If using the script, config json should be like this:
     "ap_port": "50500"
   },
   "ap": {
+    "ip": "192.168.11.1",
     "sta_port": "50000"
   }
 }
@@ -117,6 +118,7 @@ If using the script, config json should be like this:
   },
   "sta": {
     "mac_addr": "40:d8:55:04:20:19",
+    "ip": "192.168.11.10",
     "ap_port": "50500"
   }
 }
