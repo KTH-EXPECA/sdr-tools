@@ -239,7 +239,6 @@ if __name__ == "__main__":
 
     sdr = os.environ['SDR']
     json_path = os.environ['JSON_PATH']
-    output_path = os.environ['OUTPUT_PATH']
     side = os.environ['SIDE'].lower()
     if environ.get('SPEED_CHECK') is not None:
         speed_check_apip = os.environ['SPEED_CHECK'].lower()
@@ -287,6 +286,8 @@ if __name__ == "__main__":
         )
         sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
 
-    with open(output_path, "w") as write_file:
-        json.dump(sdr_status, write_file, indent=4)
+    if environ.get('OUTPUT_PATH') is not None:
+        output_path = os.environ['OUTPUT_PATH']
+        with open(output_path, "w") as write_file:
+            json.dump(sdr_status, write_file, indent=4)
 
