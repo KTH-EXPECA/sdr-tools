@@ -1,5 +1,6 @@
 import os
 import paramiko
+from os import environ
 import json
 import socket
 import re
@@ -282,7 +283,7 @@ if __name__ == "__main__":
         # ready to run the iperf commands
         stdout, strerr = run_cmd_mango(
             sdr_status['mango']['ip'],
-            "/usr/bin/iperf3 -c {0} -u -bidir -b 1G -J".format(speed_check_apip)
+            "/usr/bin/iperf3 -c {0} -u -bidir -b 1G -J --get-server-output".format(speed_check_apip)
         )
         sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
 
