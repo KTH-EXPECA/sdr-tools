@@ -6,6 +6,11 @@
 SDR='sdr-02' JSON_PATH='sdrs.json' python reboot/reboot.py
 ```
 
+Hard reboot on Mango devices changes the design to ni and back
+```
+SDR='sdr-02' JSON_PATH='sdrs.json' HARD='yes' python reboot/reboot.py
+```
+
 ## Change SDR Design
 
 Using the python script:
