@@ -254,8 +254,6 @@ if __name__ == "__main__":
     
     mango_status = check_mango(sdr_status['mango']['ip'])
     sdr_status['mango'] = { **sdr_status['mango'] , **mango_status }
-    print(f"{sdr} status:")
-    print(json.dumps(sdr_status, indent = 4))
 
     if speed_check:
         if not sdr_status['mango']['wlan0_created']:
@@ -282,7 +280,8 @@ if __name__ == "__main__":
                 sdr_status['mango']['ip'],
                 "/usr/bin/iperf3 -c {0} -u -b 1G -J".format(speed_check_apip)
             )
-            sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
+            speed_dict = json.loads(stdout)
+            sdr_status['mango']["downlink_bps"] = speed_dict["end"]["sum"]["bits_per_second"]
 
         if side=='sta':
             # ready to run the iperf commands
@@ -290,12 +289,16 @@ if __name__ == "__main__":
                 sdr_status['mango']['ip'],
                 "/usr/bin/iperf3 -c {0} -u -b 1G -J".format(speed_check_apip)
             )
-            sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
+            speed_dict = json.loads(stdout)
+            sdr_status['mango']["uplink_bps"] = speed_dict["end"]["sum"]["bits_per_second"]
 
 
+    print(f"{sdr} status:")
+    print(json.dumps(sdr_status, indent = 4))
 
     if environ.get('OUTPUT_PATH') is not None:
         output_path = os.environ['OUTPUT_PATH']
+        print(f"writing {sdr} status to {output_path}")
         with open(output_path, "w") as write_file:
             json.dump(sdr_status, write_file, indent=4)
 
