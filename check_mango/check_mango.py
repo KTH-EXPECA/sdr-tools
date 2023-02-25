@@ -276,16 +276,23 @@ if __name__ == "__main__":
                 print(f"{sdr} mango is AP not {side}.")
                 exit(0)
 
-        if speed_check and side=='ap':
-            print(f"speed check should be run on STA side")
-            exit(0)
+        if side=='ap':
+            # ready to run the iperf commands
+            stdout, strerr = run_cmd_mango(
+                sdr_status['mango']['ip'],
+                "/usr/bin/iperf3 -c {0} -u -b 1G -J".format(speed_check_apip)
+            )
+            sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
 
-        # ready to run the iperf commands
-        stdout, strerr = run_cmd_mango(
-            sdr_status['mango']['ip'],
-            "/usr/bin/iperf3 -c {0} -u -bidir -b 1G -J --get-server-output".format(speed_check_apip)
-        )
-        sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
+        if side=='sta':
+            # ready to run the iperf commands
+            stdout, strerr = run_cmd_mango(
+                sdr_status['mango']['ip'],
+                "/usr/bin/iperf3 -c {0} -u -b 1G -J".format(speed_check_apip)
+            )
+            sdr_status['mango']["wlan0_speed"] = json.loads(stdout)
+
+
 
     if environ.get('OUTPUT_PATH') is not None:
         output_path = os.environ['OUTPUT_PATH']

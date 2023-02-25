@@ -227,6 +227,7 @@ if __name__ == "__main__":
         run_cmds_mango(
             sdr_status['mango']['ip'],
             [
+                "/usr/bin/iperf3 -s -D -J",
                 "/usr/sbin/wpa_supplicant -B -i wlan0 -d nl80211 -c /home/root/wpa_supplicant.conf",
                 "/bin/sleep 10",
                 "/sbin/udhcpc -i wlan0 -b",
@@ -238,6 +239,7 @@ if __name__ == "__main__":
         run_cmds_mango(
             sdr_status['mango']['ip'],
             [
+                "/usr/bin/iperf3 -s -D -J",
                 "/usr/bin/killall dnsmasq",
                 "/usr/sbin/hostapd -B /home/root/hostapd.conf",
                 "/bin/sleep 10",
@@ -246,7 +248,6 @@ if __name__ == "__main__":
                 "/usr/bin/dnsmasq --interface=wlan0 --except-interface=lo --bind-interfaces --dhcp-range=192.168.11.2,192.168.11.30,255.255.255.0,12h --conf-file=/dev/null",
                 "/usr/sbin/iptables --table nat --append POSTROUTING --out-interface eth0 -j MASQUERADE",
                 "/bin/echo 1 > /proc/sys/net/ipv4/ip_forward",
-                "/usr/bin/iperf3 -s -D -J",
             ]
         )
 
