@@ -5,7 +5,7 @@ import json
 import socket
 import time
 
-WAIT_DURATION_SEC = 100
+WAIT_DURATION_SEC = 200
 POLLING_INTERVAL = 10
 
 # Example:

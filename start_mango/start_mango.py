@@ -5,7 +5,7 @@ import socket
 import re
 import time
 
-WAIT_DURATION_SEC=40
+WAIT_DURATION_SEC=100
 POLLING_INTERVAL=10
 
 # Example:
