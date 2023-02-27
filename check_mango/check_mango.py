@@ -241,11 +241,12 @@ if __name__ == "__main__":
     sdr = os.environ['SDR']
     json_path = os.environ['JSON_PATH']
     side = os.environ['SIDE'].lower()
+    speed_check = False
     if environ.get('SPEED_CHECK') is not None:
         speed_check_apip = os.environ['SPEED_CHECK'].lower()
         speed_check = True
 
-    print(f'You have chosen {sdr} as a {side} and speed check: \n{speed_check}')
+    print(f'You have chosen {sdr} as a {side} and speed check: {speed_check}')
 
     sdr_status = check_sdr(sdr,json_path)
     if not sdr_status['mango']['up']:
