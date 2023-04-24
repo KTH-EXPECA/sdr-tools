@@ -44,7 +44,7 @@
         	"ni" : {
 			"ip": "10.30.1.8",
 			"port": "22",
-			"tenant-port":""
+			"tenant-port":"te3/0/11"
 		}
         },
         "sdr-05" : {
@@ -56,7 +56,7 @@
         	"ni" : {
 			"ip": "10.30.1.10",
 			"port": "22",
-			"tenant-port":""
+			"tenant-port":"te3/0/12"
 		}
         },
         "sdr-06" : {
@@ -68,7 +68,7 @@
         	"ni" : {
 			"ip": "10.30.1.12",
 			"port": "22",
-			"tenant-port":""
+			"tenant-port":"te3/0/13"
 		}
         },
         "sdr-07" : {
