@@ -1,14 +1,32 @@
 # SDR tools
 
+
+How to build the docker container:
+```
+docker build -t samiemostafavi/sdr-tools .
+docker image push samiemostafavi/sdr-tools
+```
+
 ## Reboot SDR
 
+Python command:
 ```
 SDR='sdr-02' JSON_PATH='sdrs.json' python reboot/reboot.py
 ```
 
-Hard reboot on Mango devices changes the design to ni and back
+Run in a container:
+```
+docker run -it --rm -e SERVICE='reboot' -e SDR='sdr-02' -e JSON_PATH='sdrs.json' --network host samiemostafavi/sdr-tools
+```
+
+Hard reboot on Mango devices changes the design to ni and back, python command:
 ```
 SDR='sdr-02' JSON_PATH='sdrs.json' HARD='yes' python reboot/reboot.py
+```
+
+Hard reboot from a container:
+```
+docker run -it --rm -e SERVICE='reboot' -e SDR='sdr-02' -e JSON_PATH='sdrs.json' -e HARD='yes' --network host samiemostafavi/sdr-tools
 ```
 
 ## Change SDR Design
@@ -20,14 +38,7 @@ DESIGN='ni' SDR='sdr-01' JSON_PATH='sdrs.json' python change_design/change_desig
 
 Using the docker container:
 ```
-docker run -it --rm -e DESIGN='ni' -e SDR='sdr-01' -e JSON_PATH='sdrs.json' samiemostafavi/change-sdr-design
-```
-
-Build the docker container:
-```
-docker build -t change-sdr-design .
-docker tag change-sdr-design samiemostafavi/change-sdr-design
-docker image push samiemostafavi/change-sdr-design
+docker run -it --rm -e SERVICE='change_design' -e DESIGN='ni' -e SDR='sdr-02' -e JSON_PATH='sdrs.json' --network host samiemostafavi/sdr-tools
 ```
 
 ## Start Mango WiFi
@@ -47,11 +58,11 @@ DESIGN='mango' SDR='sdr-01' SIDE='sta' CONFIG='{"mac_addr":"40:d8:55:04:20:19"}'
 
 AP:
 ```
-SDR='sdr-02' SIDE='ap' JSON_PATH='sdrs.json' CONFIG='{"protocol":"udp","server":{"ip":"10.30.1.251","port":"50000"},"ap":{"server_port":"50500","sta_port":"50000"},"sta":{"mac_addr":"40:d8:55:04:20:19","ip":"192.168.11.10","ap_port":"50500"}}' python config_mango_routes/config_routes.py
+SDR='sdr-02' SIDE='ap' JSON_PATH='sdrs.json' CONFIG='{"protocol":"udp","server":{"ip":"10.30.1.251","port":"50000"},"ap":{"server_port":"50500","sta_port":"50000"},"sta":{"mac_addr":"40:d8:55:04:20:19","ip":"192.168.11.10","ap_port":"50500"}}' python config_mango_routes/config_mango_routes.py
 ```
 STA:
 ```
-SDR='sdr-01' SIDE='sta' JSON_PATH='sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"ip":"192.168.11.1","sta_port":"50000"}}' python config_mango_routes/config_routes.py
+SDR='sdr-01' SIDE='sta' JSON_PATH='sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"ip":"192.168.11.1","sta_port":"50000"}}' python config_mango_routes/config_mango_routes.py
 ```
 
 ## NC
