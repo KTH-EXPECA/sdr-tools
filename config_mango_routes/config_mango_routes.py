@@ -4,9 +4,13 @@ import json
 import socket
 import re
 
-# Example:
+# Old Example:
 # SDR='sdr-02' SIDE='ap' JSON_PATH='../sdrs.json' CONFIG='{"protocol":"udp","server":{"ip":"10.30.1.251","port":"50000"},"ap":{"server_port":"50500","sta_port":"50000"},"sta":{"mac_addr":"40:d8:55:04:20:19","ip":"192.168.11.10","ap_port":"50500"}}' python config_routes.py
 # SDR='sdr-01' SIDE='sta' JSON_PATH='../sdrs.json' CONFIG='{"protocol":"udp","client":{"ip":"10.30.1.252","port":"50000"},"sta":{"client_port":"50000","ap_port":"50500"},"ap":{"ip":"192.168.11.1","sta_port":"50000"}}' python config_routes.py
+
+# NEW version:
+# SDR='sdr-02' SIDE='ap' JSON_PATH='../sdrs.json' PROTOCOL='udp' SERVER_IP='10.30.1.251' SERVER_PORT='50000' AP_SERVER_PORT='50500' AP_STA_PORT='50000' STA_MAC_ADDR='40:d8:55:04:20:19' STA_IP='192.168.11.10' STA_AP_PORT='50500' python config_routes.py
+# SDR='sdr-01' SIDE='sta' JSON_PATH='../sdrs.json' PROTOCOL='udp' CLIENT_IP='10.30.1.252' CLIENT_PORT='50000' STA_CLIENT_PORT='50000' STA_AP_PORT='50500' AP_IP='192.168.11.1' AP_STA_PORT='50000' python config_routes.py
 
 def check_host(server_ip,port):
     try:
@@ -241,7 +245,35 @@ if __name__ == "__main__":
     sdr = os.environ['SDR']
     json_path = os.environ['JSON_PATH']
     side = os.environ['SIDE'].lower()
-    routing_conf = json.loads(os.environ['CONFIG'])
+
+    # load CONFIG
+    # routing_conf = json.loads(os.environ['CONFIG'])
+    routing_conf = {}
+    routing_conf['protocol'] = os.environ['PROTOCOL'].lower()
+    if side == 'ap':
+        routing_conf['server'] = {} 
+        routing_conf['server']['ip'] = json.loads(os.environ['SERVER_IP'])
+        routing_conf['server']['port'] = json.loads(os.environ['SERVER_PORT'])
+        routing_conf['ap'] = {} 
+        routing_conf['ap']['server_port'] = json.loads(os.environ['AP_SERVER_PORT'])
+        routing_conf['ap']['sta_port'] = json.loads(os.environ['AP_STA_PORT'])
+        routing_conf['sta'] = {} 
+        routing_conf['sta']['mac_addr'] = json.loads(os.environ['STA_MAC_ADDR'])
+        routing_conf['sta']['ip'] = json.loads(os.environ['STA_IP'])
+        routing_conf['sta']['ap_port'] = json.loads(os.environ['STA_AP_PORT'])
+    elif side == 'sta':
+        routing_conf['client'] = {} 
+        routing_conf['client']['ip'] = json.loads(os.environ['CLIENT_IP'])
+        routing_conf['client']['port'] = json.loads(os.environ['CLIENT_PORT'])
+        routing_conf['sta'] = {} 
+        routing_conf['sta']['client_port'] = json.loads(os.environ['STA_CLIENT_PORT'])
+        routing_conf['sta']['ap_port'] = json.loads(os.environ['STA_AP_PORT'])
+        routing_conf['ap'] = {} 
+        routing_conf['ap']['ip'] = json.loads(os.environ['AP_IP'])
+        routing_conf['ap']['sta_port'] = json.loads(os.environ['AP_STA_PORT'])
+    else:
+        print(f"{side} is incorrect: it should be either ap or sta")
+        exit(0)
 
     print(f'You have chosen {sdr} as a {side} and routing config: \n{routing_conf}')
     sdr_status = check_sdr(sdr,json_path)
