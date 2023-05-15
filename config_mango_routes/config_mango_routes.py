@@ -252,25 +252,25 @@ if __name__ == "__main__":
     routing_conf['protocol'] = os.environ['PROTOCOL'].lower()
     if side == 'ap':
         routing_conf['server'] = {} 
-        routing_conf['server']['ip'] = json.loads(os.environ['SERVER_IP'])
-        routing_conf['server']['port'] = json.loads(os.environ['SERVER_PORT'])
+        routing_conf['server']['ip'] = os.environ['SERVER_IP']
+        routing_conf['server']['port'] = os.environ['SERVER_PORT']
         routing_conf['ap'] = {} 
-        routing_conf['ap']['server_port'] = json.loads(os.environ['AP_SERVER_PORT'])
-        routing_conf['ap']['sta_port'] = json.loads(os.environ['AP_STA_PORT'])
+        routing_conf['ap']['server_port'] = os.environ['AP_SERVER_PORT']
+        routing_conf['ap']['sta_port'] = os.environ['AP_STA_PORT']
         routing_conf['sta'] = {} 
-        routing_conf['sta']['mac_addr'] = json.loads(os.environ['STA_MAC_ADDR'])
-        routing_conf['sta']['ip'] = json.loads(os.environ['STA_IP'])
-        routing_conf['sta']['ap_port'] = json.loads(os.environ['STA_AP_PORT'])
+        routing_conf['sta']['mac_addr'] = os.environ['STA_MAC_ADDR']
+        routing_conf['sta']['ip'] = os.environ['STA_IP']
+        routing_conf['sta']['ap_port'] = os.environ['STA_AP_PORT']
     elif side == 'sta':
         routing_conf['client'] = {} 
-        routing_conf['client']['ip'] = json.loads(os.environ['CLIENT_IP'])
-        routing_conf['client']['port'] = json.loads(os.environ['CLIENT_PORT'])
+        routing_conf['client']['ip'] = os.environ['CLIENT_IP']
+        routing_conf['client']['port'] = os.environ['CLIENT_PORT']
         routing_conf['sta'] = {} 
-        routing_conf['sta']['client_port'] = json.loads(os.environ['STA_CLIENT_PORT'])
-        routing_conf['sta']['ap_port'] = json.loads(os.environ['STA_AP_PORT'])
+        routing_conf['sta']['client_port'] = os.environ['STA_CLIENT_PORT']
+        routing_conf['sta']['ap_port'] = os.environ['STA_AP_PORT']
         routing_conf['ap'] = {} 
-        routing_conf['ap']['ip'] = json.loads(os.environ['AP_IP'])
-        routing_conf['ap']['sta_port'] = json.loads(os.environ['AP_STA_PORT'])
+        routing_conf['ap']['ip'] = os.environ['AP_IP']
+        routing_conf['ap']['sta_port'] = os.environ['AP_STA_PORT']
     else:
         print(f"{side} is incorrect: it should be either ap or sta")
         exit(0)
